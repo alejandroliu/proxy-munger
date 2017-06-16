@@ -1,0 +1,21 @@
+<?php
+class ServerSocket extends BaseSocket {
+  protected $factory;
+  public function __construct($port,$factory,$addr = '0.0.0.0',$ssl=FALSE) {
+    if (!is_callable($factory)) {
+      throw new Exception('No callback specified');
+      return FALSE;
+    }
+    $this->factory = $factory;
+    $sock = NetIO::new_server($port,$addr);
+    parent::__construct($sock);
+    MainLoop::inst()->register_socket($sock,[$this,'accept_client']);
+    Logger::notice('Listening on '.$addr.','.$port);
+  }
+  public function accept_client($main,$sock) {
+    $conn = NetIO::accept($sock);
+    Logger:notice('New connection from: '.NetIO::get_peername($sock));
+    $cb = $this->factory;
+    $cb($main,$conn);
+  }
+}
