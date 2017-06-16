@@ -13,6 +13,7 @@ class Logger implements ILogger {
   static public function error($msg) { self::out($msg); }
   static public function info($msg) { self::out($msg); }
   static public function notice($msg) { self::out($msg); }
+  static public function debug($msg) { self::out($msg); }
 }
 
 

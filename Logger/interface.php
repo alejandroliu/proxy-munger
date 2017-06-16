@@ -5,5 +5,6 @@ interface ILogger {
   static public function error($msg);
   static public function info($msg);
   static public function notice($msg);
+  static public function debug($msg);
 }
 

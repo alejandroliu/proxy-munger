@@ -11,6 +11,8 @@ class HttpTunnelClient extends HttpSocket {
       Logger::error('Error connecting to web proxy '.$proxy_addr.':'.$proxy_port.' ('.$e->getMessage().')');
       return;
     }
+    //echo __FILE__.','.__LINE__.' ('.__CLASS__.'::'.__METHOD__.')'.PHP_EOL;//DEBUG
+    parent::__construct($proxy);
     $http_command = strtr($verb,['%h'=>$target,'%p'=>$target_port]);
     $this->send_message($http_command.' HTTP/1.1', [
 				'Host' => $http_host,
@@ -18,6 +20,7 @@ class HttpTunnelClient extends HttpSocket {
 				'Content-Type' => 'application/octet-stream',
 				'Cache-Control' => 'no-cache',
 			]);
+    //echo __FILE__.','.__LINE__.' ('.__CLASS__.'::'.__METHOD__.')'.PHP_EOL;//DEBUG
     $this->descr = [
       '[http_host]' => $http_host,
       '[proxy_addr]' => $proxy_addr,
@@ -27,7 +30,7 @@ class HttpTunnelClient extends HttpSocket {
       '[cmd]' => $verb,
       '[ssl]' => $ssl,
     ];
-    parent::__construct($proxy);
+    //echo __FILE__.','.__LINE__.' ('.__CLASS__.'::'.__METHOD__.')'.PHP_EOL;//DEBUG
   }
   public function handle_request($main,$conn,$hdr,$data) {
     // Evaluate request...
@@ -37,8 +40,8 @@ class HttpTunnelClient extends HttpSocket {
       if ($tok[1]{0} == '2') { // Succesful HTTP request...
 	Logger::info(strtr('Using [http_host]([proxy_addr]:[proxy_port]) proxy to [target]:[port]',$this->descr));
 	NetIO::write($this->client,$data);
-	new SocketPump($main,$this->client,$conn);
-	new SocketPump($main,$conn,$this->client);
+	new SocketPump($this->client,$conn);
+	new SocketPump($conn,$this->client);
 	return;
       }
     }

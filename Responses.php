@@ -24,8 +24,8 @@ class HttpTunnelServer implements IHttpResponder {
 		'Server' => 'PHP '.phpversion(),
 	      ], '');
 
-    new SocketPump($main,$remote,$sock);
-    new SocketPump($main,$sock,$remote);
+    new SocketPump($remote,$sock);
+    new SocketPump($sock,$remote);
   }
 }
     

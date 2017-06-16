@@ -17,11 +17,13 @@ Proxy Toolkit in PHP
 
 ## TODO
 
-* ForwarderSocket: Plain socket forwarder
 * Config.php with functions for setting up proxies
 * ACL class
 * ACL + ServerSocket
+* Reverse Proxy (with X-Forward-For stuff)
 
 ## Changes
 
-* 0.0: first version
+* 0.1:
+  - 
+* 0.0: first (single file) version

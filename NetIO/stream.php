@@ -6,10 +6,10 @@ class NetIO implements INetIO {
   const SHUT_WR = STREAM_SHUT_WR;
   const SHUT_RDWR = STREAM_SHUT_RDWR;
   static public function shutdown($sock,$how = self::SHUT_RDWR) {
-    return stream_shutdown($sock,how);
+    return stream_socket_shutdown($sock,$how);
   }
   static public function close($sock) {
-    return close($sock);
+    return fclose($sock);
   }
   static public function select(&$rd,&$wr,&$ex,$timeout = NULL) {
     return stream_select($rd,$wr,$ex,$timeout);
@@ -49,7 +49,7 @@ class NetIO implements INetIO {
     // Defaults to 0.0.0.0 which is IPv4 only... set $addr to
     // ::0 to allow IPv4 and IPv6.
     $sockname = self::format_addr($addr,$port,$ssl);
-    fwrite(STDERR,"sockname=$sockname\n");
+    //fwrite(STDERR,"sockname=$sockname\n");
     $sock = stream_socket_server($sockname,$errno,$errstr);
     if ($sock === FALSE) {
       throw new Exception('Failed to create socket : '.$errstr.' ('.$errno.')'.PHP_EOL);
