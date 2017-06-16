@@ -11,7 +11,7 @@ abstract class HttpSocket extends BaseSocket {
   public function recv($main,$conn) {
     $off = strlen($this->request);
     if ($off > 4) $off - 4;
-    $in = NetIO::read($conn,1024);
+    $in = NetIO::read($conn);
     if ($in === FALSE) {
       Logger::error('HttpSocket, error reading socket from '.NetIO::get_peername($conn));
       $main->unregister_socket($conn);

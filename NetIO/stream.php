@@ -26,7 +26,7 @@ class NetIO implements INetIO {
   static public function get_peername($sock) {
     return stream_socket_get_name($sock,TRUE);
   }
-  static public function read($sock,$bsz) {
+  static public function read($sock,$bsz=4096) {
     return fread($sock,$bsz);
   }
   static public function write($sock,$data) {
@@ -40,7 +40,7 @@ class NetIO implements INetIO {
     }
     if (filter_var($addr,FILTER_VALIDATE_IP,FILTER_FLAG_IPV4)) {
       //fwrite(STDERR,'Selected AF_INET'.PHP_EOL);//DEBUG
-      return $proto.'://'.$addr;
+      return $proto.'://'.$addr.':'.$port;
     }
     if ($ssl) trigger_error('UNIX sockets do not support SSL',E_USER_NOTICE);
     return 'unix://'.$addr;
@@ -49,7 +49,7 @@ class NetIO implements INetIO {
     // Defaults to 0.0.0.0 which is IPv4 only... set $addr to
     // ::0 to allow IPv4 and IPv6.
     $sockname = self::format_addr($addr,$port,$ssl);
-    
+    fwrite(STDERR,"sockname=$sockname\n");
     $sock = stream_socket_server($sockname,$errno,$errstr);
     if ($sock === FALSE) {
       throw new Exception('Failed to create socket : '.$errstr.' ('.$errno.')'.PHP_EOL);

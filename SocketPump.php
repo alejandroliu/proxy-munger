@@ -7,7 +7,7 @@ class SocketPump extends BaseSocket {
     MainLoop::inst()->register_socket($in,[$this,'pump']);
   }
   public function pump($main,$in) {
-    if (($data = NetIO::read($in,1024)) !== FALSE && strlen($data) > 0) {
+    if (($data = NetIO::read($in)) !== FALSE && strlen($data) > 0) {
       NetIO::write($this->wr_socket,$data);
       return;
     }

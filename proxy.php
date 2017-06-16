@@ -14,8 +14,7 @@ require('HttpSocket.php');
 require('HttpTunnelClient.php');
 require('HttpServer.php');
 require('Responses.php');
-// SocketFowarder
-// config (with shortcuts)
+require('Logger/basic.php');
 
 $routes = [
   '/^POST\s\/vtun\/([^\/]+)\/(\d)/' => [ 'HttpTunnelServer','http_response'],

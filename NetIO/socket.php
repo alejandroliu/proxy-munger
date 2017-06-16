@@ -29,7 +29,7 @@ class NetIO implements INetIO {
       return 'tcp://['.$addr.']:'.$port;
     return 'tcp://'.$addr.':'.$port;
   }
-  static public function read($sock,$bsz) {
+  static public function read($sock,$bsz=4096) {
     return socket_read($sock,$bsz);
   }
   static public function write($sock,$data) {
