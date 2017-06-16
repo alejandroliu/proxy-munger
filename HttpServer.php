@@ -9,16 +9,21 @@ class HttpServer extends HttpSocket {
  <h1>%t</h1><pre>%m</pre>
 </html>
 EOS;
-  
   public function __construct($conn,$routes) {
     if ($routes === NULL) Logger::fatal('Missing route configuration');
     $this->routes = $routes;
     parent::__construct($conn);
   }
+  static public function check_route($re,$address) {
+    if (!$re) return TRUE;
+    if (substr($re,0,1) == '/' && substr($re,-1,1) == '/')
+	return preg_match($re,$address);
+    return fnmatch($re,$address);
+  }
   public function handle_request($main,$conn,$hdr,$data) {
     // Evaluate request...
     foreach ($this->routes as $re => $cb) {
-      if (!$re || preg_match($re,$hdr)) {
+      if (self::check_route($re,$hdr)) {
 	$cb($this,$re,$hdr,$data);
 	return;
       }

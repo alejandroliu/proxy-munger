@@ -6,7 +6,7 @@ class NetIO implements INetIO {
   const SHUT_WR = 1;
   const SHUT_RDWR = 2;
   static public function shutdown($sock,$how = self::SHUT_RDWR) {
-    return socket_shutdown($sock,how);
+    return @socket_shutdown($sock,$how);
   }
   static public function close($sock) {
     return socket_close($sock);
@@ -26,8 +26,8 @@ class NetIO implements INetIO {
   static public function get_peername($sock) {
     if (socket_getpeername($sock,$addr,$port) == FALSE) return FALSE;
     if (filter_var($addr,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6))
-      return 'tcp://['.$addr.']:'.$port;
-    return 'tcp://'.$addr.':'.$port;
+      return '['.$addr.']:'.$port;
+    return $addr.':'.$port;
   }
   static public function read($sock,$bsz=4096) {
     return socket_read($sock,$bsz);

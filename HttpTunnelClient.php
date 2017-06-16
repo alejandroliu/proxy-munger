@@ -8,7 +8,7 @@ class HttpTunnelClient extends HttpSocket {
     try {
       $proxy = NetIO::new_client($proxy_addr,$proxy_port,$ssl);
     } catch (Exception $e) {
-      Logger::error('Error connecting to web proxy '.$proxy_addr.':'.$proxy_port.' ('.$e->getMessage().')');
+      Logger::error('Error connecting to web proxy '.$proxy_addr.','.$proxy_port.' ('.$e->getMessage().')');
       return;
     }
     //echo __FILE__.','.__LINE__.' ('.__CLASS__.'::'.__METHOD__.')'.PHP_EOL;//DEBUG
@@ -38,14 +38,14 @@ class HttpTunnelClient extends HttpSocket {
     $tok = preg_split('/\s+/',$hdr,3);
     if (count($tok) >= 2) {
       if ($tok[1]{0} == '2') { // Succesful HTTP request...
-	Logger::info(strtr('Using [http_host]([proxy_addr]:[proxy_port]) proxy to [target]:[port]',$this->descr));
+	Logger::info(strtr('Using [http_host]([proxy_addr],[proxy_port]) proxy to [target],[port]',$this->descr));
 	NetIO::write($this->client,$data);
 	new SocketPump($this->client,$conn);
 	new SocketPump($conn,$this->client);
 	return;
       }
     }
-    Logger::error(strtr('Failed proxy using [http_host]([proxy_addr]:[proxy_port]) for [target]:[port]',$this->descr));
+    Logger::error(strtr('Failed proxy using [http_host]([proxy_addr],[proxy_port]) for [target],[port]',$this->descr));
     NetIO::close($this->client); // Error, abort client connection...
     NetIO::close($conn);
   }

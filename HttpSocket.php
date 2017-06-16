@@ -28,15 +28,43 @@ abstract class HttpSocket extends BaseSocket {
     
     $this->handle_request($main,$conn,$hdr,$data);
   }
+  static public function parse_header($hdr) {
+    // Parse header...
+    $h = [];
+    foreach (explode("\r\n",$hdr) as $i) {
+      if (count($h) == 0) {
+	$h[''] = preg_split('/\s+/',$i);
+      } else {
+	$i = preg_split('/:\s+/',$i,2);
+	if (count($i) == 0) continue;
+	if (count($i) == 1) {
+	  if (!isset($last)) {
+	    $h[$last] .= $i[0];
+	  } else {
+	    $h[''][] = trim($i[0]);
+	  }
+	  continue;
+	}
+	$h[$last = $i[0]] = $i[1];
+      }
+    }
+    if (count($h['']) != 3) return FALSE;
+    return $h;
+  }
   public function send_message($code,$headers,$body = '') {
+    $resp = self::prepare_message($code,$headers,$body);
     $sock = $this->get_socket();
+    NetIO::write($sock,$resp);
+  }
+  static public function prepare_message($code,$headers,$body = '') {
     $resp = $code."\r\n";
     if (strlen($body) > 1 && !isset($headers['Content-Length']))
       $headers['Content-Length'] = strlen($body);
     foreach ($headers as $k => $v) {
+      if ($k == '') continue;
       $resp .= $k.': '.$v."\r\n";
     }
     $resp .= "\r\n".$body;
-    NetIO::write($sock,$resp);
+    return $resp;
   }
 }
