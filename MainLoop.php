@@ -73,6 +73,8 @@ class MainLoop {
   }	
 
   public function run() {
+    if (count($this->fds) == 0) die('No registered sockets.  Bad configuration'.PHP_EOL);
+    
     $this->running = TRUE;
     while ($this->running) {
       $write = $except = NULL;

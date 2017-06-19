@@ -30,7 +30,7 @@ Us stream i/o only if you need SSL compatibility.
 
 ## TODO
 
-* Config.php with functions for setting up proxies
+* SSL support
 
 ## Changes
 
