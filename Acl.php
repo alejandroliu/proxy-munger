@@ -2,11 +2,11 @@
 class Acl {
   const ALLOW = TRUE;
   const DENY = FALSE;
-  const DEFAULT = '';
+  const NONE = '';
   protected $rules;
   public function evaluate($address) {
     foreach ($this->rules as $re => $result) {
-      if ($re == self::DEFAULT) return $result;
+      if ($re == self::NONE) return $result;
       if (substr($re,0,1) == '/' && substr($re,-1,1) == '/') {
 	if (preg_match($re,$address)) return $result;
 	continue;
