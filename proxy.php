@@ -42,8 +42,6 @@ function forward_port($opts) {
   return $srv;
 }
 
-  public function __construct($conn,$http_host,$proxy_addr,$proxy_port,$target,$target_port,$verb,$ssl=FALSE);
-
 function tunnel_port($opts) {
   foreach (['port','target','target_port','proxy','proxy_port'] as $i) {
     if (!isset($opts[$i])) throw new Exception('Missing '.$i.PHP_EOL);
