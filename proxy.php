@@ -72,7 +72,8 @@ function http_server($opts) {
     if (!isset($opts[$i])) throw new Exception('Missing '.$i.PHP_EOL);
   }
   if (!isset($opts['bind'])) $opts['bind'] = ANY_IP;
-  $srv = new ServerSocket($opts['port'],function ($main,$conn) use (&$routes) {
+  $routes = $opts['routes'];
+  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($routes) {
       new HttpServer($conn,$routes);
   }, $opts['bind']);
   if (isset($opts['acl'])) $srv->register_acl($opts['acl']);
@@ -103,7 +104,7 @@ if (count($argv) && file_exists($argv[0])) {
 } else {
   foreach ([dirname(CMD), dirname(realpath(CMD)), '.'] as $d) {
     foreach (['/cfg.php','/'.CMDNAME.'-cfg.php'] as $f) {
-      echo $d.$f.PHP_EOL;
+      //echo $d.$f.PHP_EOL;
       if (file_exists($d.$f)) {
 	fwrite(STDERR,'Using configuration: '.$d.$f.PHP_EOL);
 	require($d.$f);
