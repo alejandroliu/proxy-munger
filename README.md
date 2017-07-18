@@ -19,18 +19,22 @@ Us stream i/o only if you need SSL compatibility.
 
 ## Set-up
 
+Copy the sources to a directory, then run:
 
-
-## Directory structure
-
+    proxy.php config_file
 
 ## Configuring
 
+The configuration file is a `php` script used to set-up the different
+services.
+
 ## Dependencies
+
+You may need 
 
 ## TODO
 
-* SSL support
+* Proper SSL support
 
 ## Changes
 
