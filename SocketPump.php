@@ -8,6 +8,7 @@ class SocketPump extends BaseSocket {
   }
   public function pump($main,$in) {
     if (($data = NetIO::read($in)) !== FALSE && strlen($data) > 0) {
+      //echo($data);//DEBUG
       NetIO::write($this->wr_socket,$data);
       return;
     }

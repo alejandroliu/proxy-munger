@@ -14,6 +14,7 @@ class HttpTunnelClient extends HttpSocket {
     //echo __FILE__.','.__LINE__.' ('.__CLASS__.'::'.__METHOD__.')'.PHP_EOL;//DEBUG
     parent::__construct($proxy);
     $http_command = strtr($verb,['%h'=>$target,'%p'=>$target_port]);
+    //echo($http_command.PHP_EOL);//DEBUG
     $this->send_message($http_command.' HTTP/1.1', [
 				'Host' => $http_host,
 				'Connection' => 'keep-alive',
@@ -39,12 +40,14 @@ class HttpTunnelClient extends HttpSocket {
     if (count($tok) >= 2) {
       if ($tok[1]{0} == '2') { // Succesful HTTP request...
 	Logger::info(strtr('Using [http_host]([proxy_addr],[proxy_port]) proxy to [target],[port]',$this->descr));
+	//echo($data);//DEBUG
 	NetIO::write($this->client,$data);
 	new SocketPump($this->client,$conn);
 	new SocketPump($conn,$this->client);
 	return;
       }
     }
+    //echo($hdr.PHP_EOL);//DEBUG
     Logger::error(strtr('Failed proxy using [http_host]([proxy_addr],[proxy_port]) for [target],[port]',$this->descr));
     NetIO::close($this->client); // Error, abort client connection...
     NetIO::close($conn);
