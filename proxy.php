@@ -57,7 +57,7 @@ function tunnel_port($opts) {
   $http_request = $opts['http_request'];
   $http_host = $opts['http_host'];
   
-  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($http_host,$target,$target_port,$proxy,$proxy_port) {
+  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($http_request,$http_host,$target,$target_port,$proxy,$proxy_port) {
       new HttpTunnelClient($conn, $http_host,
 				NetIO::host_lookup($proxy),$proxy_port,
 				$target,$target_port,
