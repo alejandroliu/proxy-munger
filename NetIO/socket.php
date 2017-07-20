@@ -35,7 +35,7 @@ class NetIO implements INetIO {
   static public function write($sock,$data) {
     return socket_write($sock,$data);
   }
-  static public function new_server($port,$addr = '0.0.0.0',$ssl=FALSE) {
+  static public function new_server($port,$addr = '0.0.0.0',$ssl=NULL) {
     // Defaults to 0.0.0.0 which is IPv4 only... set $addr to
     // ::0 to allow IPv4 and IPv6.
     if ($ssl) throw new Excpetion('socket implementation does not support SSL');

@@ -16,7 +16,6 @@ require('Responder/interface.php');
 require('Responder/standard.php');
 require('Responder/HttpTunnelServer.php');
 require('Responder/ReverseProxyServer.php');
-require('Logger/basic.php');
 require('FwdSocket.php');
 require('Acl.php');
 
@@ -33,11 +32,14 @@ function forward_port($opts) {
     if (!isset($opts[$i])) throw new Exception('Missing '.$i.PHP_EOL);
   }
   if (!isset($opts['bind'])) $opts['bind'] = ANY_IP;
+  if (!isset($opts['ssl_in'])) $opts['ssl_in'] = NULL;
+  if (!isset($opts['ssl_out'])) $opts['ssl_out'] = FALSE;
   $target = $opts['target'];
   $port = $opts['target_port'];
-  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($target,$port) {
-    FwdSocket::forward($conn,$target,$port);
-  }, $opts['bind']);
+  $ssl_out = $opts['ssl_out'];
+  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($target,$port,$ssl_out) {
+    FwdSocket::forward($conn,$target,$port,$ssl_out);
+  }, $opts['bind'], $opts['ssl_in']);
   if (isset($opts['acl'])) $srv->register_acl($opts['acl']);
   return $srv;
 }
@@ -49,6 +51,8 @@ function tunnel_port($opts) {
   if (!isset($opts['bind'])) $opts['bind'] = ANY_IP;
   if (!isset($opts['http_request'])) $opts['http_request'] = 'CONNECT %h:%p';
   if (!isset($opts['http_host'])) $opts['http_host'] = $opts['proxy'];
+  if (!isset($opts['ssl_in'])) $opts['ssl_in'] = NULL;
+  if (!isset($opts['ssl_out'])) $opts['ssl_out'] = FALSE;
   
   $target = $opts['target'];
   $target_port = $opts['target_port'];
@@ -56,13 +60,14 @@ function tunnel_port($opts) {
   $proxy_port = $opts['proxy_port'];
   $http_request = $opts['http_request'];
   $http_host = $opts['http_host'];
+  $ssl_out = $opts['ssl_out'];
   
-  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($http_request,$http_host,$target,$target_port,$proxy,$proxy_port) {
+  $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($http_request,$http_host,$target,$target_port,$proxy,$proxy_port,$ssl_out) {
       new HttpTunnelClient($conn, $http_host,
 				NetIO::host_lookup($proxy),$proxy_port,
 				$target,$target_port,
-				$http_request);
-      }, $opts['bind']);
+				$http_request,$ssl_out);
+      }, $opts['bind'], $opts['ssl_in']);
   if (isset($opts['acl'])) $srv->register_acl($opts['acl']);
   return $srv;
 }
@@ -72,10 +77,11 @@ function http_server($opts) {
     if (!isset($opts[$i])) throw new Exception('Missing '.$i.PHP_EOL);
   }
   if (!isset($opts['bind'])) $opts['bind'] = ANY_IP;
+  if (!isset($opts['ssl'])) $opts['ssl'] = NULL;
   $routes = $opts['routes'];
   $srv = new ServerSocket($opts['port'],function ($main,$conn) use ($routes) {
       new HttpServer($conn,$routes);
-  }, $opts['bind']);
+  }, $opts['bind'], $opts['ssl']);
   if (isset($opts['acl'])) $srv->register_acl($opts['acl']);
   return $srv;
 }
@@ -97,17 +103,19 @@ function debug_response() {
 function reverse_proxy($opts) {
   return [new ReverseProxyServer($opts),'http_response'];
 }
-  
+
 if (count($argv) && file_exists($argv[0])) {
-  fwrite(STDERR,'Reading configuration: '.$argv[0].PHP_EOL);
-  require(array_shift($argv));
+  //fwrite(STDERR,'Reading configuration: '.$argv[0].PHP_EOL);
+  require($c = array_shift($argv));
+  Logger::info('Configured from '.$c);
 } else {
   foreach ([dirname(CMD), dirname(realpath(CMD)), '.'] as $d) {
     foreach (['/cfg.php','/'.CMDNAME.'-cfg.php'] as $f) {
       //echo $d.$f.PHP_EOL;
       if (file_exists($d.$f)) {
-	fwrite(STDERR,'Using configuration: '.$d.$f.PHP_EOL);
-	require($d.$f);
+	//fwrite(STDERR,'Using configuration: '.$d.$f.PHP_EOL);
+	require($c = $d.$f);
+	Logger::info('Configured from '.$c);
 	$f = NULL;
 	break 2;
       }
@@ -115,6 +123,9 @@ if (count($argv) && file_exists($argv[0])) {
   }
   if ($f) die('No valid configuration file found!'.PHP_EOL);
 }
-
-MainLoop::inst()->run();
+try {
+  MainLoop::inst()->run();
+} catch (Exception $e) {
+  Logger::fatal($e->GetMessage());
+}
 

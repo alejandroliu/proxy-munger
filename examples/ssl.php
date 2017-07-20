@@ -1,9 +1,6 @@
 <?php
 //require('NetIO/socket.php');
 require('NetIO/stream.php');
-require('Logger/basic.php');
-//require('Logger/syslog.php');Logger::init(CMDNAME,LOG_PERROR|LOG_PID,LOG_DAEMON);
-//require('Logger/file.php');Logger::cfg('log.txt');
 
 $def_acl = acl([
   '10.*' => ALLOW,
@@ -49,4 +46,9 @@ $routes = [
 http_server([
   'port' => 8000,
   'bind' => '::0',
-  'routes' => $routes]);
+  'routes' => $routes,
+  'ssl' => [
+    'local_cert' => dirname(realpath(__FILE__)).'/server.pem',
+    'passphrase' => 'comet',
+  ],
+]);

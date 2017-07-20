@@ -21,7 +21,7 @@ Us stream i/o only if you need SSL compatibility.
 
 Copy the sources to a directory, then run:
 
-    proxy.php config_file
+    proxy.php config_file </dev/null
 
 ## Configuring
 
@@ -30,11 +30,12 @@ services.
 
 ## Dependencies
 
-You may need 
+If using 
 
 ## TODO
 
-* Proper SSL support
+* Test SSL support
+* Documentation and Examples.
 
 ## Changes
 

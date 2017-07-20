@@ -45,12 +45,36 @@ class NetIO implements INetIO {
     if ($ssl) trigger_error('UNIX sockets do not support SSL',E_USER_NOTICE);
     return 'unix://'.$addr;
   }
-  static public function new_server($port,$addr = '0.0.0.0',$ssl=FALSE) {
+  static public function new_server($port,$addr = '0.0.0.0',$ssl=NULL) {
     // Defaults to 0.0.0.0 which is IPv4 only... set $addr to
     // ::0 to allow IPv4 and IPv6.
     $sockname = self::format_addr($addr,$port,$ssl);
     //fwrite(STDERR,"sockname=$sockname\n");
-    $sock = stream_socket_server($sockname,$errno,$errstr);
+    if ($ssl) {
+      if (!is_array($ssl)) $ssl = [ 'local_cert' => $ssl ];
+      if (!isset($ssl['local_cert'])) {
+	throw new Exception('No SSL[local_cert] provided in PEM format'.PHP_EOL);
+	return FALSE;
+      }
+      if (!is_readable($ssl['local_cert'])) {
+	throw new Exception($ssl['local_cert'].' PEM certificate not found'.PHP_EOL);
+	return FALSE;
+      }
+      foreach (['passphrase'=>'','allow_self_signed'=>TRUE,'verify_peer'=>FALSE] as $i=>$j) {
+	if (!isset($ssl[$i])) $ssl[$i] = $j;
+      }
+
+      $context = stream_context_create();
+      foreach ($ssl as $i=>$j) {
+	stream_context_set_option($context,'ssl',$i,$j);
+      }
+      // Create the server socket
+      $sock = stream_socket_server($sockname,$errno,$errstr,
+	      STREAM_SERVER_BIND|STREAM_SERVER_LISTEN,
+	      $context);
+    } else {
+      $sock = stream_socket_server($sockname,$errno,$errstr);
+    }
     if ($sock === FALSE) {
       throw new Exception('Failed to create socket : '.$errstr.' ('.$errno.')'.PHP_EOL);
       return FALSE;
