@@ -30,7 +30,12 @@ services.
 
 ## Dependencies
 
-If using 
+If using `socket i/o`, you may need to enable that extension, either
+by installing it or enabling it through `php.ini`.
+
+Documentation is generated using PhpDoc.  Use:
+
+    yum install php-pear-PhpDocumentor 
 
 ## TODO
 
@@ -42,6 +47,10 @@ If using
 * 0.1:
   - 
 * 0.0: first (single file) version
+
+## API Reference
+
+- 
 
 
 sshc -> [munger](httpTunnelClient,PROXY-POST) -> [corp-proxy] ->

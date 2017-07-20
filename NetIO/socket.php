@@ -1,6 +1,14 @@
 <?php
+/**
+ * Basic socket I/O implementation
+ * @package proxy_munger\socket
+ */
+ 
 require(dirname(realpath(__FILE__)).'/interface.php');
 
+/**
+ * This class implements NetIO based on sockets
+ */
 class NetIO implements INetIO {
   const SHUT_RD = 0;
   const SHUT_WR = 1;

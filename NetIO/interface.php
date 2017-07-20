@@ -1,4 +1,12 @@
 <?php
+/**
+ * NetIO interface
+ * @package proxy_munger
+ */
+ 
+/**
+ * This interface defines the basic network I/O operations
+ */
 interface INetIO {
   static public function shutdown($sock,$how);
   static public function close($sock);

@@ -1,8 +1,15 @@
 <?php
+/**
+ * Sample script used for creating server certificates.
+ * 
+ * @package proxy_munger
+ */
 // Optionally set the passphrase to whatever you want,
 // or leave it empty for no passphrase
-$pemfile = './server.pem';
 $pem_passphrase = 'comet';
+// Output certificate file
+$pemfile = './server.pem';
+// Certificate data
 $certificateData = [
     "countryName" => "NL",
     "stateOrProvinceName" => "ZH",

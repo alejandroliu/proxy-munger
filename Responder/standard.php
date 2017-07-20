@@ -11,13 +11,15 @@ class DefaultResponse implements IHttpResponder {
   }
 }
 
-class Erro405Response implements IHttpResponder {
+
+
+class Err405Response implements IHttpResponder {
   static public function http_response($server,$re,$hdr,$data) {
     $server->send_error('Access Denied','405 FORBIDDEN');
   }
 }
 
-class Erro404Response implements IHttpResponder {
+class Err404Response implements IHttpResponder {
   static public function http_response($server,$re,$hdr,$data) {
     $server->send_error('Resource not found','404 NOT FOUND');
   }

@@ -1,5 +1,12 @@
 <?php
-require(dirname(realpath(__FILE__)).'/interface.php');
+/**
+ * Stream I/O implementation
+ * @package proxy_munger\stream
+ */
+ require(dirname(realpath(__FILE__)).'/interface.php');
+/**
+ * This class implements NetIO based on sockets
+ */
 
 class NetIO implements INetIO {
   const SHUT_RD = STREAM_SHUT_RD;
