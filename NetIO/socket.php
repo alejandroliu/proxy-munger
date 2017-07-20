@@ -1,21 +1,36 @@
 <?php
 /**
  * Basic socket I/O implementation
- * @package proxy_munger\socket
+ * @package proxy_munger
  */
  
 require(dirname(realpath(__FILE__)).'/interface.php');
 
 /**
  * This class implements NetIO based on sockets
+ * @package proxy_munger
  */
-class NetIO implements INetIO {
+class NetIOSocket implements INetIO {
+  /** Shutdown socket for reading */
   const SHUT_RD = 0;
+  /** Shutdown socket for writing */
   const SHUT_WR = 1;
+  /** Shutdown socket for reading and writing */
   const SHUT_RDWR = 2;
+  /**
+   * Shutdowns socket (possibly only half)
+   * 
+   * @param rsrc	$sock - socket
+   * @param enum	$how - One of SHUT_RD, SHUT_WR or SHUT_RDWR
+   */
   static public function shutdown($sock,$how = self::SHUT_RDWR) {
     return @socket_shutdown($sock,$how);
   }
+  /**
+   * Close socket
+   *
+   * @param rsrc	$sock - socket
+   */
   static public function close($sock) {
     return socket_close($sock);
   }
@@ -109,3 +124,6 @@ class NetIO implements INetIO {
 }  
 
 
+/** @ignore */
+class NetIO extends NetIOSocket {
+}

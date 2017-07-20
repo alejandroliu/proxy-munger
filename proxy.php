@@ -42,6 +42,7 @@ define('ANY_IP','0.0.0.0');
 /**
  * Configure Access control list
  *
+ * @api
  * @param array $list - Access Control list
  */
 function acl($list) {
@@ -66,6 +67,7 @@ function acl($list) {
  * * array	$opts['acl'] - Access control list
  * 
  *
+ * @api
  * @param array	$opts - Options.
  */
 function forward_port($opts) {
@@ -107,6 +109,7 @@ function forward_port($opts) {
  * * str	$opts['ssl_in']['verify_peer'] - Defaults to FALSE
  * * array	$opts['acl'] - Access control list
  * 
+ * @api
  * @param array	$opts - Options:
  */
 function tunnel_port($opts) {
@@ -153,6 +156,7 @@ function tunnel_port($opts) {
  * * str	$opts['ssl']['verify_peer'] - Defaults to FALSE
  * * array	$opts['acl'] - Access control list
  * 
+ * @api
  * @param array	$opts - options
  */
 function http_server($opts) {
@@ -196,6 +200,7 @@ function debug_response() {
 /**
  * http_server route implementing a reverse proxy 
  *
+ * @api
  * @param array	$opts - Configuration options
  **/
 function reverse_proxy($opts) {
