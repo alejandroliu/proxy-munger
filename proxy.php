@@ -15,6 +15,7 @@ define('CMDNAME',basename(CMD,'.php'));
 error_reporting(E_ALL);
 
 set_include_path(get_include_path().PATH_SEPARATOR.dirname(realpath(__FILE__)));
+set_include_path(get_include_path().PATH_SEPARATOR.dirname(realpath(__FILE__)).PATH_SEPARATOR.'classes');
 require('MainLoop.php');
 require('BaseSocket.php');
 require('ServerSocket.php');

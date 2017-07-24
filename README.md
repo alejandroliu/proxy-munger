@@ -33,9 +33,6 @@ services.
 If using `socket i/o`, you may need to enable that extension, either
 by installing it or enabling it through `php.ini`.
 
-Documentation is generated using PhpDoc.  Use:
-
-    yum install php-pear-PhpDocumentor 
 
 ## TODO
 
