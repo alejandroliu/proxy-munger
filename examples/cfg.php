@@ -1,6 +1,6 @@
 <?php
-//require('NetIO/socket.php');
-require('NetIO/stream.php');
+require('NetIO/socket.php');
+//require('NetIO/stream.php');
 require('Logger/basic.php');
 //require('Logger/syslog.php');Logger::init(CMDNAME,LOG_PERROR|LOG_PID,LOG_DAEMON);
 //require('Logger/file.php');Logger::cfg('log.txt');
