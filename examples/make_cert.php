@@ -16,7 +16,7 @@ $certificateData = [
     "localityName" => "Den Haag",
     "organizationName" => "iliu.net",
     "organizationalUnitName" => "Development",
-    "commonName" => "localhost",
+    "commonName" => "*.iliu.net",
     "emailAddress" => "alejandro_liu@hotmail.com"
 ];
 
